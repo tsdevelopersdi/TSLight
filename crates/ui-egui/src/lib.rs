@@ -6,13 +6,20 @@
 #![forbid(unsafe_code)]
 #![deny(clippy::unwrap_used, clippy::expect_used, clippy::panic, clippy::unimplemented, clippy::todo, clippy::unreachable)]
 
-/// LightCraft as craft-update knows it, with its 128 px icon and accent colour: the update
+/// TSLight as craft-update knows it, with its 128 px icon and accent colour: the update
 /// prompt shows both, and an AppImage's menu entry gets the icon.
+///
+/// Updates come from Tech Services SDI's own releases (`tsdevelopersdi/TSLight`), never from the
+/// upstream repository: assets are `tslight-<version>-<os>-<arch>.<ext>` plus `SHA256SUMS.txt`, as
+/// `packaging/windows/package.ps1` builds them. Built with `App::new`, so it has no former ids or
+/// names and an upstream install on the same machine is never taken for this app.
 #[cfg(not(target_arch = "wasm32"))]
 pub const UPDATE_APP: craft_update::app::App = craft_update::app::App {
     icon_png: Some(include_bytes!("../../../assets/app-icon/hicolor/128x128/apps/ai.storyteller.lightcraft.png")),
     accent: Some([0xf2, 0xa5, 0x16]),
-    ..craft_update::suite::LIGHTCRAFT
+    name: "TSLight",
+    developer: "Solusi Daya Indonesia",
+    ..craft_update::app::App::new("tslight", "TSLight", "TSLight photo library and raw developer", "tsdevelopersdi/TSLight")
 };
 
 pub mod brush_live;
@@ -644,4 +651,16 @@ pub struct Caches {
     pub grid: panels::grid::GridCache,
     /// What the grid did on its frames (benchmarks and tests check unchanged frames stay cheap).
     pub grid_stats: panels::grid::GridStats,
+}
+/// Updates come only from Tech Services SDI's repository, under this app's own asset names, so an
+/// upstream merge can't quietly point users back at the upstream releases.
+#[cfg(all(test, not(target_arch = "wasm32")))]
+mod ts_update_source {
+    #[test]
+    fn updates_come_from_the_ts_repository() {
+        let app = &super::UPDATE_APP;
+        assert_eq!(app.repo, "tsdevelopersdi/TSLight");
+        assert_eq!(app.id, "tslight");
+        assert!(app.former_ids.is_empty() && app.former_names.is_empty());
+    }
 }
