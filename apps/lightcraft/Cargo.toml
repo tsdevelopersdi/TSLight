@@ -1,10 +1,15 @@
 [package]
 name = "lightcraft"
+description = "TSLight desktop app"
 version.workspace = true
 edition.workspace = true
 license.workspace = true
 publish = false
-default-run = "lightcraft"
+default-run = "tslight"
+
+[[bin]]
+name = "tslight"
+path = "src/main.rs"
 
 [lints]
 workspace = true

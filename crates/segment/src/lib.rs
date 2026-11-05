@@ -269,7 +269,7 @@ fn hugging_face_format(weights: &weights::Weights) -> Result<()> {
     if !weights.contains(first) && (weights.has_prefix("detector.backbone.") || weights.has_prefix("tracker.")) {
         return Err(Error::Model(format!(
             "{WEIGHTS_FILE} is Meta's original checkpoint (sam3.pt, or a sam3.safetensors conversion of it as on community mirrors); \
-             LightCraft needs the Hugging Face format: {WEIGHTS_FILE} from facebook/sam3"
+             TSLight needs the Hugging Face format: {WEIGHTS_FILE} from facebook/sam3"
         )));
     }
     Ok(())

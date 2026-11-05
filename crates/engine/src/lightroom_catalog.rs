@@ -685,7 +685,7 @@ pub(crate) fn refuse_non_media(data: &mut CatalogImport) {
         if !refused.contains(&p.source_id) {
             return true;
         }
-        warnings.push(format!("image {}: not imported; {} isn't one of the file types LightCraft reads", p.source_id, p.path));
+        warnings.push(format!("image {}: not imported; {} isn't one of the file types TSLight reads", p.source_id, p.path));
         false
     });
     data.warnings.extend(warnings);
@@ -748,10 +748,10 @@ fn lightroom_orientation(code: &str) -> Option<Orientation> {
     ALL.into_iter().find(|&o| code.chars().eq([corner(o, 0.0, 0.0), corner(o, 1.0, 0.0)]))
 }
 
-/// Lightroom's crop in LightCraft's frame. `crs` gives the crop's top-left (`CropLeft`, `CropTop`)
+/// Lightroom's crop in TSLight's frame. `crs` gives the crop's top-left (`CropLeft`, `CropTop`)
 /// and bottom-right (`CropRight`, `CropBottom`) corners on the stored image (before orientation and
 /// straightening), normalized to its size, plus a straighten angle that turns the other way to
-/// LightCraft's. LightCraft's crop is a rectangle in the oriented image rotated by `angle` about its
+/// TSLight's. TSLight's crop is a rectangle in the oriented image rotated by `angle` about its
 /// centre, normalized to the oriented image's size, so the corners go through the orientation and
 /// then the rotation; `stored_aspect` (width / height of the stored image) matters once the
 /// rectangle turns. On a real catalog this reproduced the frame aspect of all 223 straightened crops
@@ -787,8 +787,8 @@ fn in_photo_frame(catalog: Orientation, user: Orientation) -> Orientation {
     (0..turns).fold(o, |o, _| o.rotated(true))
 }
 
-/// Lightroom's masks in LightCraft's frame. Like the crop's corners, their positions are on the
-/// stored image (before orientation), normalized to its size; LightCraft's are on the oriented
+/// Lightroom's masks in TSLight's frame. Like the crop's corners, their positions are on the
+/// stored image (before orientation), normalized to its size; TSLight's are on the oriented
 /// image. So the points go through the orientation, a radial's radii (in long-edge units, from the
 /// stored image's aspect) swap when the axes do, and a mirror turns its angle the other way. A
 /// quarter turn keeps the angle: the ellipse turned 90° is the same ellipse with its radii swapped.
@@ -829,7 +829,7 @@ fn catalog_masks(partial: &mut Value, orientation: Orientation) {
     }
 }
 
-/// The catalog's XMP masks in LightCraft's frame, as [`catalog_masks`] puts the develop row's: they
+/// The catalog's XMP masks in TSLight's frame, as [`catalog_masks`] puts the develop row's: they
 /// are on the same stored image, and they stay when the row has no masks of its own. The packet's
 /// radials come fitted to the sidecar default aspect and `sidecar::merge_into` re-fits them to the
 /// photo's size, so they are fitted to the stored image to be turned (a quarter turn swaps the

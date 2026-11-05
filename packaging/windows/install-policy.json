@@ -1,6 +1,6 @@
 {
-  "id": "lightcraft",
-  "name": "LightCraft",
+  "id": "tslight",
+  "name": "TSLight",
   "upgradeCode": "229BB552-5EFD-479A-BA86-8CB6D926390C",
   "sources": [
     "lightcraft.wxs"
@@ -14,19 +14,19 @@
   "payloads": [
     "FONT-LICENCES.txt",
     "NOTICE",
-    "lightcraft-cli.exe",
-    "lightcraft.exe"
+    "tslight-cli.exe",
+    "tslight.exe"
   ],
   "registry": [
     [
       "-1",
-      "Software\\Microsoft\\Windows\\CurrentVersion\\App Paths\\lightcraft.exe",
+      "Software\\Microsoft\\Windows\\CurrentVersion\\App Paths\\tslight.exe",
       "",
-      "[#LightcraftExe]"
+      "[#TSLightExe]"
     ],
     [
       "-1",
-      "Software\\LightCraft",
+      "Software\\TSLight",
       "InstallFolder",
       "[INSTALLFOLDER]"
     ]

@@ -33,7 +33,8 @@ pub const MAX_TEMPLATES: usize = 200;
 /// File extension of an exported print template (JSON).
 pub const FILE_EXT: &str = "lcprint";
 /// `format` tag of an exported print template file.
-const FILE_FORMAT: &str = "lightcraft.printTemplate";
+const FILE_FORMAT: &str = "tslight.printTemplate";
+const LEGACY_FILE_FORMAT: &str = "lightcraft.printTemplate";
 /// Version of the template file this build writes and the newest it reads.
 const FILE_VERSION: u64 = 1;
 /// Largest template file read, bytes.
@@ -96,12 +97,13 @@ impl PrintTemplate {
             return Err(format!("{} bytes is too large for a print template (at most {} KB)", bytes.len(), MAX_FILE / 1024));
         }
         let v: serde_json::Value = serde_json::from_slice(bytes).map_err(|e| format!("not a print template file: {e}"))?;
-        if v.get("format").and_then(serde_json::Value::as_str) != Some(FILE_FORMAT) {
+        let fmt = v.get("format").and_then(serde_json::Value::as_str);
+        if fmt != Some(FILE_FORMAT) && fmt != Some(LEGACY_FILE_FORMAT) {
             return Err(format!("not a print template file (`format` is not \"{FILE_FORMAT}\")"));
         }
         match v.get("version").and_then(serde_json::Value::as_u64) {
             Some(1..=FILE_VERSION) => {}
-            Some(n) => return Err(format!("print template file version {n} is not one this version of LightCraft reads (1 to {FILE_VERSION})")),
+            Some(n) => return Err(format!("print template file version {n} is not one this version of TSLight reads (1 to {FILE_VERSION})")),
             None => return Err("a print template file needs a `version` number".into()),
         }
         let name = clean_name(v.get("name").and_then(serde_json::Value::as_str).ok_or("a print template file needs a `name`")?)?;

@@ -28,7 +28,8 @@ use crate::slide_title::TitleSettings;
 use crate::slideshow::PlaybackSettings;
 
 /// The `format` of a template document.
-pub const FORMAT: &str = "lightcraft.slideshowTemplate";
+pub const FORMAT: &str = "tslight.slideshowTemplate";
+pub const LEGACY_FORMAT: &str = "lightcraft.slideshowTemplate";
 /// The newest document version this build reads (and the one it writes).
 pub const VERSION: u64 = 1;
 /// Largest template file read (bytes).
@@ -190,7 +191,7 @@ pub struct Parsed {
 }
 
 /// Read a template document. Refused: more than [`MAX_FILE`] bytes, not JSON, another format, a
-/// version from a newer LightCraft, a bad name, unknown keys and any setting its section's
+/// version from a newer TSLight, a bad name, unknown keys and any setting its section's
 /// validation refuses.
 pub fn parse(bytes: &[u8]) -> Result<Parsed, String> {
     if bytes.len() as u64 > MAX_FILE {
@@ -201,7 +202,7 @@ pub fn parse(bytes: &[u8]) -> Result<Parsed, String> {
     let v: Value = serde_json::from_str(text).map_err(|e| format!("not a slideshow template: {e}"))?;
     let Value::Object(o) = v else { return Err("not a slideshow template (not a JSON object)".into()) };
     match o.get("format").and_then(Value::as_str) {
-        Some(FORMAT) => {}
+        Some(FORMAT) | Some(LEGACY_FORMAT) => {}
         Some(other) => return Err(format!("not a slideshow template (format `{other}`, expected `{FORMAT}`)")),
         None => return Err(format!("not a slideshow template (no `format`: \"{FORMAT}\")")),
     }
@@ -209,7 +210,7 @@ pub fn parse(bytes: &[u8]) -> Result<Parsed, String> {
         Some(v) => match v.as_u64() {
             Some(n) if n > VERSION => {
                 return Err(format!(
-                    "made by a newer LightCraft (template version {n}; this one reads version {VERSION}): update LightCraft to use it"
+                    "made by a newer TSLight (template version {n}; this one reads version {VERSION}): update TSLight to use it"
                 ));
             }
             Some(n) if n >= 1 => {}
@@ -293,7 +294,7 @@ pub fn builtins() -> Vec<Template> {
     BUILTINS
         .iter()
         .filter_map(|(slug, json)| {
-            let p = parse(json.as_bytes()).inspect_err(|e| eprintln!("lightcraft: built-in slideshow template {slug}: {e}")).ok()?;
+            let p = parse(json.as_bytes()).inspect_err(|e| eprintln!("tslight: built-in slideshow template {slug}: {e}")).ok()?;
             Some(Template {
                 id: format!("{BUILTIN}{slug}"),
                 name: p.name.unwrap_or_else(|| (*slug).to_string()),
@@ -380,7 +381,7 @@ fn read_dir(dir: &Path, out: &mut Listing) {
 fn read_user(file: &str, path: &Path) -> Result<Template, String> {
     let stem = file.get(..file.len().saturating_sub(5)).unwrap_or_default();
     if file_stem(stem).as_deref() != Some(stem) {
-        return Err("the file name isn't one LightCraft makes (letters, digits, spaces, - _ ( ) only); rename the file".into());
+        return Err("the file name isn't one TSLight makes (letters, digits, spaces, - _ ( ) only); rename the file".into());
     }
     let meta = std::fs::symlink_metadata(path).map_err(|e| e.to_string())?;
     if !meta.file_type().is_file() {
@@ -472,7 +473,7 @@ impl Session {
             }));
         }
         if id.starts_with(USER) && user_stem(id).is_none() {
-            return Err(format!("`{id}` isn't a template id (user templates are `user:` and a file name LightCraft made)"));
+            return Err(format!("`{id}` isn't a template id (user templates are `user:` and a file name TSLight made)"));
         }
         self.slide_templates().get(id).cloned().ok_or_else(|| format!("no slideshow template `{id}`"))
     }
@@ -513,7 +514,7 @@ impl Session {
 
     fn templates_dir(&self) -> Result<PathBuf, String> {
         self.slide_templates_dir.clone().ok_or_else(|| {
-            "user templates need a settings folder, and this LightCraft has none (the web build, or LIGHTCRAFT_CONFIG_DIR is set empty)".into()
+            "user templates need a settings folder, and this TSLight has none (the web build, or LIGHTCRAFT_CONFIG_DIR is set empty)".into()
         })
     }
 

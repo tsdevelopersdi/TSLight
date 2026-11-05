@@ -124,7 +124,7 @@ pub fn parse_preset_file(name: &str, bytes: &[u8]) -> Result<Vec<Preset>, String
     let list = match &v {
         Value::Object(o) if o.contains_key("presets") => {
             let f: PresetFile = serde_json::from_value(v.clone()).map_err(|e| e.to_string())?;
-            if f.format != LCPRESET_FORMAT {
+            if f.format != LCPRESET_FORMAT && f.format != "tslight.preset" {
                 return Err(format!("unknown preset format `{}`", f.format));
             }
             f.presets

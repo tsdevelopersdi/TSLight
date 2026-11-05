@@ -313,7 +313,7 @@ fn tpl_export(s: &mut Session, p: &Value) -> Result<Value> {
 fn export(s: &mut Session, p: &Value) -> Result<Value> {
     const C: &str = "slideshow.export";
     if cfg!(target_arch = "wasm32") {
-        return Err(bad(C, "slideshow export needs the desktop app or lightcraft-cli"));
+        return Err(bad(C, "slideshow export needs the desktop app or tslight-cli"));
     }
     if s.slideshow_export.as_ref().is_some_and(|r| r.running()) {
         return Err(bad(C, "a slideshow export is already running (activity.cancel stops it)"));

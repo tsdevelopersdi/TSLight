@@ -22,9 +22,10 @@ use std::sync::OnceLock;
 use crate::Session;
 
 /// Files beside the executable that switch on portable mode (either one; contents are ignored).
-pub const PORTABLE_MARKERS: [&str; 2] = ["portable.txt", "LightCraft.portable"];
+pub const PORTABLE_MARKERS: [&str; 4] = ["portable.txt", "TSLight.portable", "tslight.portable", "LightCraft.portable"];
 /// The data folder created beside the executable in portable mode.
-pub const PORTABLE_DATA_DIR: &str = "LightCraftData";
+pub const PORTABLE_DATA_DIR: &str = "TSLightData";
+pub const LEGACY_PORTABLE_DATA_DIR: &str = "LightCraftData";
 
 #[derive(Clone, Copy)]
 enum Platform {
@@ -49,7 +50,7 @@ pub fn config_dir() -> Option<PathBuf> {
 
 /// `portable` is asked only without an override, so an isolated run never probes beside the executable.
 fn config_dir_with(platform: Platform, env: impl Fn(&str) -> Option<OsString>, portable: impl FnOnce() -> Option<PathBuf>) -> Option<PathBuf> {
-    if let Some(dir) = env("LIGHTCRAFT_CONFIG_DIR") {
+    if let Some(dir) = env("TSLIGHT_CONFIG_DIR").or_else(|| env("LIGHTCRAFT_CONFIG_DIR")) {
         return (!dir.is_empty()).then(|| PathBuf::from(dir));
     }
     if let Some(dir) = portable() {
@@ -57,7 +58,7 @@ fn config_dir_with(platform: Platform, env: impl Fn(&str) -> Option<OsString>, p
     }
     match platform {
         Platform::Mac => env("HOME").map(|h| PathBuf::from(h).join("Library/Application Support/LightCraft")),
-        Platform::Windows => env("APPDATA").map(|a| PathBuf::from(a).join("LightCraft")),
+        Platform::Windows => env("APPDATA").map(|a| PathBuf::from(a).join("TSLight")),
         Platform::Other => {
             env("XDG_CONFIG_HOME").map(PathBuf::from).or_else(|| env("HOME").map(|h| PathBuf::from(h).join(".config"))).map(|c| c.join("lightcraft"))
         }
@@ -87,7 +88,7 @@ fn portable_dir_in(exe_dir: &Path) -> Result<Option<PathBuf>, String> {
     let Some(marker) = PORTABLE_MARKERS.iter().map(|m| exe_dir.join(m)).find(|p| p.is_file()) else {
         return Ok(None);
     };
-    let data = exe_dir.join(PORTABLE_DATA_DIR);
+    let data = if exe_dir.join(LEGACY_PORTABLE_DATA_DIR).is_dir() && !exe_dir.join(PORTABLE_DATA_DIR).exists() { exe_dir.join(LEGACY_PORTABLE_DATA_DIR) } else { exe_dir.join(PORTABLE_DATA_DIR) };
     match ensure_writable(&data) {
         Ok(()) => Ok(Some(data)),
         Err(e) => Err(format!(

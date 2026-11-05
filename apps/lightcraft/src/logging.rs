@@ -31,7 +31,7 @@ use std::time::SystemTime;
 use log::LevelFilter;
 
 /// The current log file's name inside the log folder.
-pub const LOG_FILE: &str = "lightcraft.log";
+pub const LOG_FILE: &str = "tslight.log";
 /// How many previous logs are kept (`lightcraft.1.log` … `lightcraft.<KEEP>.log`).
 pub const KEEP: usize = 2;
 /// The log file stops growing past this size (a runaway warning can't fill the disk).
@@ -146,7 +146,7 @@ fn utc_parts(secs: i64, nanos: u32) -> (i64, chrono::NaiveDateTime) {
 }
 
 fn numbered(dir: &Path, n: usize) -> PathBuf {
-    if n == 0 { dir.join(LOG_FILE) } else { dir.join(format!("lightcraft.{n}.log")) }
+    if n == 0 { dir.join(LOG_FILE) } else { dir.join(format!("tslight.{n}.log")) }
 }
 
 /// Shift the previous logs up one (`.log` → `.1.log` → … → `.<KEEP>.log`, the oldest dropped)
@@ -295,7 +295,7 @@ impl AppLogger {
     /// error), whatever the filter. Skipped when the sink is busy: the panic may have happened on
     /// this very thread while it held the lock, and waiting would hang the app.
     pub fn record_panic(&self, thread: &str, report: &str) {
-        let line = format_line(&timestamp(SystemTime::now()), log::Level::Error, thread, "lightcraft", report);
+        let line = format_line(&timestamp(SystemTime::now()), log::Level::Error, thread, "tslight", report);
         let mut sink = match self.sink.try_lock() {
             Ok(sink) => sink,
             Err(TryLockError::Poisoned(p)) => p.into_inner(),

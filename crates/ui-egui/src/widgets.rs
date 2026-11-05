@@ -226,12 +226,12 @@ pub fn preview_only_variant(reason: &str) -> &str {
 pub fn preview_only_explanation(reason: &str) -> String {
     if reason.starts_with("Nikon High Efficiency NEF (") {
         return crate::i18n::tr(
-            "Nikon High Efficiency NEF (HE / HE★) uses intoPIX TicoRAW compression. LightCraft does not currently have a license for this codec, so only the camera's embedded JPEG preview is available, not the raw sensor data. To edit raw data, shoot Lossless compressed NEF or convert existing HE files to DNG using a licensed converter.",
+            "Nikon High Efficiency NEF (HE / HE★) uses intoPIX TicoRAW compression. TSLight does not currently have a license for this codec, so only the camera's embedded JPEG preview is available, not the raw sensor data. To edit raw data, shoot Lossless compressed NEF or convert existing HE files to DNG using a licensed converter.",
         )
         .to_string();
     }
     crate::i18n::tr_format!(
-        "LightCraft can't decode this raw variant yet ({}). You're editing the camera's embedded JPEG preview, which already includes the camera's picture style (e.g. Monochrome) and white balance.",
+        "TSLight can't decode this raw variant yet ({}). You're editing the camera's embedded JPEG preview, which already includes the camera's picture style (e.g. Monochrome) and white balance.",
         preview_only_variant(reason)
     )
 }
@@ -1367,12 +1367,12 @@ pub mod text_field;
 mod slider_reset_tests;
 
 fn focused_slider_key() -> egui::Id {
-    egui::Id::unique("lightcraft-focused-slider")
+    egui::Id::unique("tslight-focused-slider")
 }
 
 /// The slider a click or drag armed for vertical wheel edits, if any.
 fn wheel_slider_key() -> egui::Id {
-    egui::Id::unique("lightcraft-wheel-slider")
+    egui::Id::unique("tslight-wheel-slider")
 }
 
 /// Whether the widget with keyboard focus is a develop slider selected by a click, drag or Tab.

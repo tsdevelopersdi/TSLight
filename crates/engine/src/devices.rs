@@ -93,7 +93,7 @@ impl DeviceWatch {
             s.refreshing = true;
             let me = self.clone();
             // the scan runs without the state lock; `get` only ever waits for a list clone
-            let spawned = std::thread::Builder::new().name("lightcraft-devices".into()).spawn(move || {
+            let spawned = std::thread::Builder::new().name("tslight-devices".into()).spawn(move || {
                 let list = (me.scanner)();
                 me.store(list);
             });

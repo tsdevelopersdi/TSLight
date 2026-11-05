@@ -1,18 +1,16 @@
-<p align="center">
-  <a href="https://getartcraft.com/">
-    <picture>
-      <source media="(prefers-color-scheme: dark)" srcset="docs/brand/artcraft-logo-white.svg">
-      <img alt="ArtCraft" src="docs/brand/artcraft-logo.svg" width="200">
-    </picture>
-  </a>
-</p>
+
 
 
 <p align="center">
-  <img src="assets/app-icon/hicolor/256x256/apps/ai.storyteller.lightcraft.png" width="128" height="128" alt="LightCraft icon: an engraved lynx on an amber tile">
+  <img src="assets/app-icon/hicolor/256x256/apps/ai.storyteller.lightcraft.png" width="128" height="128" alt="TSLight icon">
 </p>
 
-<h1 align="center">LightCraft</h1>
+<h1 align="center">TSLight</h1>
+
+> [!NOTE]
+> **TSLight** is an internal non-commercial fork of [LightCraft](https://github.com/storytold/lightcraft) by **Solusi Daya Indonesia**.
+> Licensed under MIT OR Apache-2.0. All trademarks and brands belong to their respective owners.
+
 
 <h3 align="center">Your photos. Your pixels. Your machine.</h3>
 
@@ -38,15 +36,9 @@
   <a href="https://coderabbit.ai"><img alt="Reviewed by CodeRabbit" src="https://img.shields.io/coderabbit/prs/github/storytold/lightcraft?style=flat-square&label=Reviewed%20by%20CodeRabbit&logo=coderabbit"></a>
 </p>
 
-<p align="center">
-  <a href="https://discord.gg/artcraft"><img alt="Join the ArtCraft community on Discord" src="https://img.shields.io/badge/Join%20us%20on%20Discord-5865F2?style=for-the-badge&logo=discord&logoColor=white" height="40"></a>
-</p>
 
-<p align="center">
-  <a href="https://getartcraft.com/apps/lightcraft"><b>LightCraft on getartcraft.com</b></a> ·
-  <a href="https://getartcraft.com/">ArtCraft</a> ·
-  <a href="https://getartcraft.com/apps">All Crafting Apps</a>
-</p>
+
+
 
 <br>
 
@@ -56,9 +48,7 @@
   <sub><i>Ansel Adams, "The Tetons and the Snake River" (1942). Public domain, U.S. National Archives. Developed in LightCraft.</i></sub>
 </p>
 
-> [!NOTE]
-> **ArtCraft is a community of artists from all walks of life.** Digital, generative, music,
-> games &mdash; if you make things, you're one of us. **[Come say hi on Discord](https://discord.gg/artcraft).**
+**
 
 <p align="center">
   <a href="#edit-like-you-mean-it">Editing</a> ·
@@ -399,12 +389,12 @@ Workspace builds, including the desktop, web and CLI applications, require Rust 
 
 ```sh
 git clone https://github.com/storytold/lightcraft && cd lightcraft
-cargo run --release -p lightcraft                       # opens your library (~/Pictures/LightCraft Library; a new one starts with demo photos)
-cargo run --release -p lightcraft -- ~/Pictures/trip    # import your photos (folders are scanned, duplicates skipped)
-cargo run --release -p lightcraft -- --memory           # a throwaway in-memory demo session (writes nothing)
-cargo run --release -p lightcraft -- --control 7980     # with the automation channel
+cargo run --release -p lightcraft --bin tslight                       # opens your library (~/Pictures/LightCraft Library; a new one starts with demo photos)
+cargo run --release -p lightcraft --bin tslight -- ~/Pictures/trip    # import your photos (folders are scanned, duplicates skipped)
+cargo run --release -p lightcraft --bin tslight -- --memory           # a throwaway in-memory demo session (writes nothing)
+cargo run --release -p lightcraft --bin tslight -- --control 7980     # with the automation channel
 cargo xtask web --serve                                 # the same app in the browser: http://127.0.0.1:8080/
-cargo run --release -p lightcraft-cli -- render photo.jpg -o out.jpg --set light.exposure=0.5
+cargo run --release -p lightcraft --bin tslight-cli -- render photo.jpg -o out.jpg --set light.exposure=0.5
 cargo xtask ci                                          # fmt, clippy, HEIF, tests, parity, layers, assets, WASM
 cargo xtask ci --quick                                  # only what your branch's changes can break (minutes)
 ```
@@ -493,7 +483,7 @@ GPU tests on every backend that has a hardware adapter. Nothing is uploaded.
 
 ```sh
 git clone https://github.com/storytold/craft-fonts ../craft-fonts
-CRAFT_FONTS_DIR=../craft-fonts cargo run --release -p lightcraft
+CRAFT_FONTS_DIR=../craft-fonts cargo run --release -p lightcraft --bin tslight
 ```
 
 Without it LightCraft builds and runs the same, but Chinese and Japanese text have no glyphs. Fonts are never committed to this
@@ -674,9 +664,7 @@ And [**ArtCraft**](https://getartcraft.com/) itself, our AI image and video stud
 
 <br>
 
-<p align="center">
-  <a href="https://discord.gg/artcraft"><img alt="Join the ArtCraft community on Discord" src="https://img.shields.io/badge/Join%20us%20on%20Discord-5865F2?style=for-the-badge&logo=discord&logoColor=white" height="40"></a>
-</p>
+
 
 <h3 align="center">Come make things with us</h3>
 
@@ -687,12 +675,7 @@ And [**ArtCraft**](https://getartcraft.com/) itself, our AI image and video stud
   Whatever your medium and however long you've been at it, you're welcome here.
 </p>
 
-<p align="center">
-  <a href="https://discord.gg/artcraft"><b>discord.gg/artcraft</b></a> ·
-  <a href="https://getartcraft.com/">getartcraft.com</a> ·
-  <a href="https://getartcraft.com/apps">The Crafting Apps</a> ·
-  <a href="https://getartcraft.com/apps/lightcraft">LightCraft</a>
-</p>
+
 
 <br>
 

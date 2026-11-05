@@ -18,7 +18,7 @@ use crate::{Result, Session};
 /// File extension of exported effect presets (JSON).
 pub const EFFECT_EXT: &str = "lceffect";
 /// `format` tag of an exported effect-preset file.
-const FILE_FORMAT: &str = "lightcraft.maskEffects";
+const FILE_FORMAT: &str = "tslight.maskEffects";
 /// The Lua `type` of a Lightroom local adjustment preset.
 const LR_LOCAL_TYPE: &str = "LocalizedAdjustmentPreset";
 /// Larger files aren't presets (or bundles of them).

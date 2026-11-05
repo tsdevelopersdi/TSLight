@@ -182,8 +182,7 @@ fn right_icons(app: &mut LightcraftApp, ui: &mut egui::Ui, t: &Tokens, full: Rec
         None => crate::i18n::tr("Import Photos…").to_string(),
     };
     for (id, icon, tip, cmd) in [
-        ("discord", Icon::Chat, "Join the ArtCraft community on Discord", "app.discord"),
-        ("cloud", Icon::Cloud, cloud_tip, ""),
+                ("cloud", Icon::Cloud, cloud_tip, ""),
         ("help", Icon::Help, "Keyboard shortcuts", "app.shortcuts"),
         ("share", Icon::Share, "Export", "dialog.export"),
         ("import", Icon::Plus, import_tip.as_str(), "file.addPhotos"),
@@ -277,7 +276,7 @@ fn unsaved_tip(n: usize, e: &str) -> String {
     let s = crate::i18n::plural_s(n);
     let it = if n == 1 { "it" } else { "them" };
     crate::i18n::tr_format!(
-        "{n} change{} saved in memory but not written to disk: {e}\nLightCraft retries automatically; quitting now would lose {}.",
+        "{n} change{} saved in memory but not written to disk: {e}\nTSLight retries automatically; quitting now would lose {}.",
         s,
         it,
         e = e,

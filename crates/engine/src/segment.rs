@@ -32,7 +32,7 @@ use crate::Session;
 pub const INPUT_EDGE: usize = 1008;
 /// Download size of the model (`model.safetensors`; the tokenizer files add ~2 MB).
 pub const MODEL_BYTES: u64 = 3_439_938_512;
-/// The model's licence (not LightCraft's): shown before downloading.
+/// The model's licence (not TSLight's): shown before downloading.
 pub const LICENSE_NAME: &str = "SAM License (Meta)";
 pub const LICENSE_URL: &str = "https://github.com/facebookresearch/sam3/blob/main/LICENSE";
 /// How errors about a missing model start (frontends decide on [`crate::ErrorKind::ModelMissing`], not on this text).
@@ -269,7 +269,7 @@ impl Segmenter {
             format!("{NOT_INSTALLED} yet: it is downloading ({pct} %).")
         } else {
             format!(
-                "{NOT_INSTALLED}. Download it (about {:.1} GB, {LICENSE_NAME}) when LightCraft offers it, with `segment.model.download {{\"acknowledged\": true}}`, or put model.safetensors, vocab.json and merges.txt in {}.",
+                "{NOT_INSTALLED}. Download it (about {:.1} GB, {LICENSE_NAME}) when TSLight offers it, with `segment.model.download {{\"acknowledged\": true}}`, or put model.safetensors, vocab.json and merges.txt in {}.",
                 MODEL_BYTES as f64 / 1e9,
                 dir.display()
             )

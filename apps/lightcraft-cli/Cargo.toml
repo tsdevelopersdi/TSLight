@@ -4,10 +4,10 @@ version.workspace = true
 edition.workspace = true
 license.workspace = true
 publish = false
-description = "LightCraft command-line tool: headless render, command listing and the MCP server"
+description = "TSLight command-line tool: headless render, command listing and the MCP server"
 
 [[bin]]
-name = "lightcraft-cli"
+name = "tslight-cli"
 path = "src/main.rs"
 
 [lints]
@@ -40,3 +40,6 @@ dhat-heap = ["dep:dhat"]
 # Open HEIC/HEIF photos (the optional lightcraft-heif crate). Not default so distributors choose
 # it (HEVC patents); build with `--features heif` to include it.
 heif = ["lightcraft-codecs/heif"]
+
+[build-dependencies]
+winresource = "0.1"

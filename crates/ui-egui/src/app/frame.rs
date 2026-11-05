@@ -164,7 +164,7 @@ impl LightcraftApp {
                 self.toast_for(
                     ctx,
                     crate::i18n::tr_format!(
-                        "The XMP sidecars of {n} photos couldn't be written (is their folder offline?). LightCraft keeps trying.",
+                        "The XMP sidecars of {n} photos couldn't be written (is their folder offline?). TSLight keeps trying.",
                         n = waiting
                     ),
                     8.0,
@@ -321,8 +321,8 @@ impl LightcraftApp {
     /// "LightCraft — <library name>" (just "LightCraft" for a library that isn't saved).
     pub fn window_title(&self) -> String {
         match panels::settings::open_library_name(self) {
-            Some(name) => format!("LightCraft — {name}"),
-            None => "LightCraft".to_string(),
+            Some(name) => format!("TSLight — {name}"),
+            None => "TSLight".to_string(),
         }
     }
 
@@ -333,7 +333,7 @@ impl LightcraftApp {
     pub fn page_title(&self, unsaved: bool) -> String {
         let dot = if unsaved { " •" } else { "" };
         match self.session.active().and_then(|id| self.session.catalog.photo(id)) {
-            Some(p) => format!("{}{dot} — LightCraft", p.file_name),
+            Some(p) => format!("{}{dot} — TSLight", p.file_name),
             None => format!("{}{dot}", self.window_title()),
         }
     }

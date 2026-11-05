@@ -1,15 +1,15 @@
 use super::prefs::config_dir;
 
 pub(crate) const HELP: &str = "\
-lightcraft — photo library + raw developer
+tslight — photo library + raw developer
 
-USAGE: lightcraft [OPTIONS] [FILES/FOLDERS…]   (files and folders are imported; a library's catalog.snap or
+USAGE: tslight [OPTIONS] [FILES/FOLDERS…]   (files and folders are imported; a library's catalog.snap or
                                                folder opens that library)
 
 OPTIONS:
   --library DIR    open (or create) this library (env LIGHTCRAFT_LIBRARY; default: the last library opened, or
                    a list of the recent ones with Settings > General > At launch: Ask me or Alt/Option held,
-                   else ~/Pictures/LightCraft Library)
+                   else ~/Pictures/TSLight Library)
   --no-demo        don't seed a new library with the procedural demo photos
   --memory         throwaway in-memory session (alias --demo); nothing is saved
   --control PORT   serve the JSON-lines control channel on 127.0.0.1:PORT (env LIGHTCRAFT_CONTROL_PORT;
@@ -18,15 +18,15 @@ OPTIONS:
 
 ENVIRONMENT:
   LIGHTCRAFT_CONFIG_DIR=DIR   use this settings folder instead of the platform default (empty = no settings folder).
-                   Without it, a portable.txt file next to the program puts the folder beside it (LightCraftData)
+                   Without it, a portable.txt file next to the program puts the folder beside it (TSLightData)
   LIGHTCRAFT_GPU_BACKEND=dx12|vulkan|metal|auto|off   graphics backend (default: DX12 on Windows, Metal on macOS,
                    Vulkan on Linux; off = render on the CPU); else WGPU_BACKEND. LIGHTCRAFT_GPU=0: CPU rendering.
   LIGHTCRAFT_SAM3_DIR=DIR   the SAM 3 model for Object / Describe masks (default: <settings folder>/models/sam3;
-                   optional: LightCraft offers to download it when first needed)
+                   optional: TSLight offers to download it when first needed)
   LIGHTCRAFT_SAM3_MIRRORS=URL,…   where to download the SAM 3 model from (base URLs, tried in order)
-  LIGHTCRAFT_LOG=info|debug   more log detail from LightCraft itself (default: info from LightCraft, warnings
+  LIGHTCRAFT_LOG=info|debug   more log detail from TSLight itself (default: info from TSLight, warnings
                    from other crates); else RUST_LOG=<env_logger directives>. Records go to stderr and to
-                   <settings folder>/logs/lightcraft.log (previous runs: lightcraft.1.log, lightcraft.2.log)
+                   <settings folder>/logs/tslight.log (previous runs: tslight.1.log, tslight.2.log)
 ";
 
 /// The launch arguments' files and folders to import (absolute), and a notice for each one that
@@ -71,7 +71,7 @@ pub(crate) fn launch_imports_in(args: &[String], cwd: Option<&std::path::Path>, 
             Some(LaunchPath::Library(dir)) if library.is_none() => library = Some(std::path::PathBuf::from(dir)),
             Some(LaunchPath::Library(dir)) => {
                 log::warn!("one library at a time: not opening {dir} given at launch");
-                notices.push(format!("{dir} was not opened: LightCraft opens one library at a time. Open it with File ▸ Open Library…"));
+                notices.push(format!("{dir} was not opened: TSLight opens one library at a time. Open it with File ▸ Open Library…"));
             }
             Some(LaunchPath::Import(p)) => files.push(p),
             Some(LaunchPath::Refused { path, why }) => {
@@ -108,25 +108,25 @@ pub(crate) fn control_port_from(what: &str, value: Option<String>) -> Option<u16
 /// An isolated profile keeps the emergency crash log with its other app data. With no
 /// override (or an empty override), retain the historical system-temp location.
 pub(crate) fn panic_log_path_with(env: impl Fn(&str) -> Option<std::ffi::OsString>, temp: std::path::PathBuf) -> std::path::PathBuf {
-    env("LIGHTCRAFT_CONFIG_DIR").filter(|value| !value.is_empty()).map(std::path::PathBuf::from).unwrap_or(temp).join("lightcraft-panics.log")
+    env("LIGHTCRAFT_CONFIG_DIR").filter(|value| !value.is_empty()).map(std::path::PathBuf::from).unwrap_or(temp).join("tslight-panics.log")
 }
 
-/// What to tell the user when LightCraft stopped while running (`error`), and why when the GPU
+/// What to tell the user when TSLight stopped while running (`error`), and why when the GPU
 /// was lost (`lost`): GPU rendering is off from the next start.
 pub(crate) fn stopped_text(error: &str, lost: Option<&str>) -> String {
     match lost {
         Some(reason) => format!(
-            "{error}. The graphics driver reset the GPU ({reason}). LightCraft renders on the CPU from its next start; \
+            "{error}. The graphics driver reset the GPU ({reason}). TSLight renders on the CPU from its next start; \
              Settings ▸ Performance ▸ Use the GPU for rendering turns the GPU back on"
         ),
         None => error.to_string(),
     }
 }
 
-/// LightCraft stopped while its window was up: say so in the log and in a native message box
+/// TSLight stopped while its window was up: say so in the log and in a native message box
 /// naming the log file (as [`startup_failed`] does for a start that failed).
 pub(crate) fn stopped_while_running(text: &str, log_file: Option<&std::path::Path>) {
-    log::error!("LightCraft stopped: {text}");
+    log::error!("TSLight stopped: {text}");
     if std::env::var_os("LIGHTCRAFT_NO_PREFS").is_some() {
         return; // tests and scripts: no dialog to click away
     }
@@ -143,7 +143,7 @@ pub(crate) fn stopped_while_running(text: &str, log_file: Option<&std::path::Pat
 /// message box naming the log file, instead of exiting without a trace — the release builds have
 /// no console on Windows, and an app started from Finder shows no standard error (issue #260).
 pub(crate) fn startup_failed(error: &str, log_file: Option<&std::path::Path>) {
-    log::error!("LightCraft could not open its window: {error}");
+    log::error!("TSLight could not open its window: {error}");
     if std::env::var_os("LIGHTCRAFT_NO_PREFS").is_some() {
         return; // tests and scripts: no dialog to click away
     }
@@ -164,7 +164,7 @@ mod config_path_tests {
     fn config_override_keeps_panic_log_in_isolated_profile() {
         let temp = std::path::PathBuf::from("temp");
         assert_eq!(panic_log_path_with(|_| Some("isolated".into()), temp.clone()), std::path::PathBuf::from("isolated/lightcraft-panics.log"));
-        assert_eq!(panic_log_path_with(|_| None, temp.clone()), temp.join("lightcraft-panics.log"));
-        assert_eq!(panic_log_path_with(|_| Some("".into()), temp.clone()), temp.join("lightcraft-panics.log"));
+        assert_eq!(panic_log_path_with(|_| None, temp.clone()), temp.join("tslight-panics.log"));
+        assert_eq!(panic_log_path_with(|_| Some("".into()), temp.clone()), temp.join("tslight-panics.log"));
     }
 }
